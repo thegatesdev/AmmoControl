@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "io.github.thegatesdev"
-version = "1.0"
+version = "1.1"
 description = "Crossbow ammunition control"
 
 

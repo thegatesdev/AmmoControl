@@ -1,0 +1,45 @@
+# JVM crash related
+core.*
+hs_err_pid*
+
+# Intellij
+/.idea/*
+!/.idea/runConfigurations
+*.iml
+*.ipr
+*.iws
+out/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Netbeans
+nbproject/
+nbactions.xml
+
+# Gradle
+!gradle-wrapper.jar
+.gradle/
+build/
+*/build/
+
+# Build files
+bin/
+dist/
+manifest.mf
+
+# Mac
+.DS_Store/
+.DS_Store
+
+# Vim
+.*.sw[a-p]
+
+# Linux
+*~
+
+# Other
+run/
+*.jar

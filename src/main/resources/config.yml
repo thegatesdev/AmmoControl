@@ -10,6 +10,8 @@ fireworks:
   cooldown: 0
   limit: 0
 arrows:
+  # ENABLING THIS WILL ALLOW PLAYERS TO DUPLICATE ARROWS
+  # Maybe I will fix that in some next release, by disabling arrow pickup for these arrows
   # Available modes: 'disabled', 'keep_bow', 'keep_item'
   mode: disabled
   # Cooldown and limit are not yet implemented

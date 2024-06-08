@@ -103,7 +103,7 @@ public final class AmmoListener implements Listener {
 
         // We don't know what projectile got charged... Bukkit!!!
         // Luckily, fireworks only charge when in the opposite hand... for now
-        ItemStack oppositeItem = player.getInventory().getItem(event.getHand().getOppositeHand());
+        ItemStack oppositeItem = player.getInventory().getItem(getOppositeHandSlot(event.getHand()));
         @SuppressWarnings("ConstantValue") // Yeah, right... not null, until it suddenly becomes null
         boolean isFirework = oppositeItem != null && oppositeItem.getType() == Material.FIREWORK_ROCKET;
 
@@ -118,5 +118,15 @@ public final class AmmoListener implements Listener {
         } else {
             return settings.arrowMode() == mode && perm.hasPermission("ammocontrol.enable.arrows");
         }
+    }
+
+    private static EquipmentSlot getOppositeHandSlot(EquipmentSlot slot) {
+        // Yeah, this method exists in 1.20.6 but thou always asked for a backport
+        return switch (slot) {
+            case HAND -> EquipmentSlot.OFF_HAND;
+            case OFF_HAND -> EquipmentSlot.HAND;
+            default ->
+                    throw new IllegalArgumentException("Unable to determine an opposite hand for equipment slot: " + slot.name());
+        };
     }
 }

@@ -17,13 +17,19 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 
 tasks {
     runServer {
-        minecraftVersion("1.20.6")
+        minecraftVersion("1.20.4")
         legacyPluginLoading = false
     }
 }
@@ -32,7 +38,7 @@ tasks {
 val bukkitYaml = bukkitPluginYaml {
     main = "io.github.thegatesdev.ammo.control.AmmoControl"
     author = "thegatesdev"
-    apiVersion = "1.20.6"
+    apiVersion = "1.20"
 
     commands {
         create("ammocontrol") {

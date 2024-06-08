@@ -1,19 +1,11 @@
 printDebug: false
-# Tab completion is implemented in a stupid way, disable if it causes issues
 disableTabCompletion: false
-# Disable this if other plugins are editing the contents of crossbows
 simpleProjectileCheck: true
 fireworks:
-  # Available modes: 'disabled', 'keep_bow', 'keep_item'
   mode: keep_item
-  # Cooldown and limit are not yet implemented
-  cooldown: 0
-  limit: 0
+  cooldown: 0 # Not implemented
+  limit: 0 # Not implemented
 arrows:
-  # ENABLING THIS WILL ALLOW PLAYERS TO DUPLICATE ARROWS
-  # Maybe I will fix that in some next release, by disabling arrow pickup for these arrows
-  # Available modes: 'disabled', 'keep_bow', 'keep_item'
   mode: disabled
-  # Cooldown and limit are not yet implemented
-  cooldown: 0
-  limit: 0
+  cooldown: 0 # Not implemented
+  limit: 0 # Not implemented

@@ -36,7 +36,7 @@ tasks {
 bukkitPluginYaml {
     main = "io.github.thegatesdev.ammo.control.AmmoControl"
     author = "thegatesdev"
-    apiVersion = "1.20"
+    apiVersion = "1.19"
 
     commands {
         create("ammocontrol") {

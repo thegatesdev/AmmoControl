@@ -1,9 +1,8 @@
 import xyz.jpenilla.resourcefactory.bukkit.Permission
-import xyz.jpenilla.resourcefactory.bukkit.bukkitPluginYaml
 
 plugins {
     java
-    id("xyz.jpenilla.resource-factory") version "1.1.1"
+    id("xyz.jpenilla.resource-factory-bukkit-convention") version "1.1.1"
     id("xyz.jpenilla.run-paper") version "2.3.0"
 }
 
@@ -34,8 +33,7 @@ tasks {
     }
 }
 
-
-val bukkitYaml = bukkitPluginYaml {
+bukkitPluginYaml {
     main = "io.github.thegatesdev.ammo.control.AmmoControl"
     author = "thegatesdev"
     apiVersion = "1.20"
@@ -110,11 +108,5 @@ val bukkitYaml = bukkitPluginYaml {
         create("ammocontrol.bypass.arrows.limit") {
             description = "Bypass the arrow fire limit"
         }
-    }
-}
-
-sourceSets.main {
-    resourceFactory {
-        factory(bukkitYaml.resourceFactory())
     }
 }

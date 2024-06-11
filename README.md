@@ -1,6 +1,6 @@
-# AmmoControl
+# Cross Your Bows
 
-*Configurable arrow firing*
+*Crossbows have never been this powerful!*
 
 A plugin for Minecraft.
-[To the Modrinth page.](https://modrinth.com/plugin/ammo-control)
+[To the Modrinth page.](https://modrinth.com/plugin/cross-your-bows)

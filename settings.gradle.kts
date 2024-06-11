@@ -1,3 +1,3 @@
-rootProject.name = "AmmoControl"
+rootProject.name = "CrossYourBows"
 
 include("bukkit")

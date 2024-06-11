@@ -1,0 +1,18 @@
+require_permission: false
+fire_configurations:
+  default:
+    keep_charged: true
+    consume_item: true
+    fire_cooldown: 20
+    max_charges: 10
+  shotgun:
+    fire_cooldown: 10
+    max_charges: 3
+    allow_projectile: arrow
+    custom_firing:
+      arrow_pickup: false
+      pattern:
+        type: line # point
+        rotation: 90
+      spread_x: 2
+      spread_y: 20

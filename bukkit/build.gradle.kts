@@ -14,26 +14,27 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT")
 }
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
 
 tasks {
     runServer {
-        minecraftVersion("1.20.4")
+        minecraftVersion("1.20.6")
         legacyPluginLoading = false
     }
 }
 
 bukkitPluginYaml {
+    name = "CrossYourBows"
     main = "io.github.thegatesdev.crossyourbows.CrossYourBowsBukkit"
     author = "thegatesdev"
-    apiVersion = "1.19"
+    apiVersion = "1.20.6"
     description = "Crossbows have never been this powerful!"
 }

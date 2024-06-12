@@ -2,24 +2,33 @@ package io.github.thegatesdev.crossyourbows.handler;
 
 import io.github.thegatesdev.crossyourbows.data.*;
 import io.papermc.paper.event.entity.*;
+import net.kyori.adventure.text.*;
+import net.kyori.adventure.text.format.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
+import org.bukkit.event.entity.*;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.*;
 import org.bukkit.persistence.*;
+import org.slf4j.*;
 
 import java.util.*;
-import java.util.logging.*;
+import java.util.function.*;
+import java.util.logging.Logger;
 
 public final class GameplayHandler implements Listener {
 
     private static final String PERM_USAGE = "crossyourbows.enable";
     private static final NamespacedKey KEY_CHARGE_COUNT = new NamespacedKey("crossyourbows", "charge_count");
     private static final NamespacedKey KEY_FIRE_CONFIG_NAME = new NamespacedKey("crossyourbows", "fire_config_name");
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(GameplayHandler.class);
 
     private final Logger logger;
     private Settings settings;
+
+    private volatile AfterFireCallback afterFireCallback;
 
     public GameplayHandler(Logger logger, Settings settings) {
         this.logger = logger;
@@ -31,14 +40,14 @@ public final class GameplayHandler implements Listener {
         this.settings = settings;
     }
 
-    private Optional<FireConfiguration> configForItem(ItemMeta itemMeta) {
-        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+    private Optional<FireConfiguration> configForItem(PersistentDataContainer pdc) {
         String nameValue = pdc.get(KEY_FIRE_CONFIG_NAME, PersistentDataType.STRING);
         if (nameValue == null) return settings.defaultConfig();
         return settings.namedConfig(nameValue);
     }
 
     private boolean chargedIsFirework(PlayerInventory inventory, EquipmentSlot usedHand) {
+        // This method relies on the opposite hand being the only way to load firework rockets.
         ItemStack offhandItem = inventory.getItem(usedHand.getOppositeHand());
         @SuppressWarnings("ConstantValue") // This @NotNull guarantee may change in the future for paper.
         boolean firework = offhandItem != null && offhandItem.getType() == Material.FIREWORK_ROCKET;
@@ -64,7 +73,7 @@ public final class GameplayHandler implements Listener {
         }
 
         // Try getting the relevant configuration for this bow item (or the global defaults, if present).
-        Optional<FireConfiguration> opFireConfig = configForItem(bowMeta);
+        Optional<FireConfiguration> opFireConfig = configForItem(bowMeta.getPersistentDataContainer());
         if (opFireConfig.isEmpty()) return;
         FireConfiguration fireConfig = opFireConfig.get();
 
@@ -72,7 +81,12 @@ public final class GameplayHandler implements Listener {
         ProjectileSelection selection = fireConfig.projectileSelection();
         if (selection != ProjectileSelection.BOTH) {
             boolean firework = chargedIsFirework(player.getInventory(), event.getHand());
-            if (firework != (selection == ProjectileSelection.FIREWORK)) return;
+            if (firework != (selection == ProjectileSelection.FIREWORK)) {
+                event.setConsumeItem(false);
+                event.setCancelled(true);
+                player.sendMessage(Component.text("This item cannot be loaded!", Style.style(NamedTextColor.RED)));
+                return;
+            }
         }
 
         // Should the item be consumed?
@@ -87,5 +101,83 @@ public final class GameplayHandler implements Listener {
         }
 
         if (metaChanged) bowItem.setItemMeta(bowMeta);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    private void handleFireInteraction(PlayerInteractEvent event) {
+        if (!event.hasItem()) return;
+        if (!event.getAction().isRightClick()) return;
+
+        // Get and check item data
+        ItemStack bowItem = event.getItem();
+        if (bowItem == null || bowItem.getType() != Material.CROSSBOW) return;
+        ItemMeta bowMeta = bowItem.getItemMeta();
+        if (bowMeta == null) return;
+        PersistentDataContainer pdc = bowMeta.getPersistentDataContainer();
+
+        // Find the configuration for this item
+        Optional<FireConfiguration> opFireConfig = configForItem(pdc);
+        if (opFireConfig.isEmpty()) return;
+        FireConfiguration fireConfig = opFireConfig.get();
+
+        final boolean keepBowArrow;
+        if (fireConfig.maxCharges() == 0) keepBowArrow = true; // Infinite charges
+        else if (fireConfig.maxCharges() == 1) keepBowArrow = false; // Always one charge
+        else {
+            Integer charges = pdc.get(KEY_CHARGE_COUNT, PersistentDataType.INTEGER);
+            if (charges != null && charges > 1) {
+                // Charges never get to zero, if charge is equal to one the bow will unload when firing.
+                pdc.set(KEY_CHARGE_COUNT, PersistentDataType.INTEGER, --charges);
+                keepBowArrow = true;
+            } else {
+                keepBowArrow = false;
+            }
+        }
+
+        int cooldown = fireConfig.fireCooldown();
+        Optional<ArrowSettings> opArrowSettings = fireConfig.arrowSettings();
+        afterFireCallback = new AfterFireCallback(event.getPlayer().getUniqueId(), (fireEvent, player) -> {
+            ItemStack bowItemFire = fireEvent.getBow();
+            if (bowItemFire == null || bowItemFire.getType() != Material.CROSSBOW) return;
+
+            if (fireEvent.getProjectile() instanceof Arrow arrow) {
+                opArrowSettings.ifPresent(st -> {
+                    arrow.setKnockbackStrength(st.knockBack());
+                    arrow.setPierceLevel(st.pierce());
+                    arrow.setDamage(st.damage());
+                    arrow.setCritical(st.critical());
+                });
+            }
+
+            if (keepBowArrow) {
+                // Reset to charged state
+                bowItemFire.setItemMeta(bowMeta);
+                // Optionally apply cooldown
+                player.setCooldown(Material.CROSSBOW, cooldown);
+                // Set arrow to not be a pickup (allows picking up the last shot arrow)
+                if (fireEvent.getProjectile() instanceof Arrow arrow) {
+                    arrow.setPickupStatus(AbstractArrow.PickupStatus.CREATIVE_ONLY);
+                }
+            }
+        });
+    }
+
+    @EventHandler
+    private void handleAfterFire(EntityShootBowEvent event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+        AfterFireCallback callback = afterFireCallback;
+        if (callback == null) return;
+        afterFireCallback = null;
+
+        if (callback.playerID != player.getUniqueId()) {
+            logger.warning("Plugin event order assumption failed!");
+            return;
+        }
+        callback.nextShootHandler.accept(event, player);
+    }
+
+
+    private record AfterFireCallback(UUID playerID,
+            BiConsumer<EntityShootBowEvent, Player> nextShootHandler) {
     }
 }

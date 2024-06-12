@@ -1,10 +1,14 @@
 require_permission: false
 fire_configurations:
   default:
-    keep_charged: true
     consume_item: true
-    fire_cooldown: 20
-    max_charges: 10
+    fire_cooldown: 2
+    max_charges: 20
+    arrow:
+      knockback: 3
+      damage: 10.0
+      pierce: 3
+      critical: true
   shotgun:
     fire_cooldown: 10
     max_charges: 3

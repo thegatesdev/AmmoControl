@@ -145,7 +145,6 @@ public final class GameplayHandler implements Listener {
 
         // If permissions are enabled, the player needs a permission for the bow settings to apply.
         if (settings.requirePermission() && !event.getPlayer().hasPermission(PERM_USAGE)) {
-            warn(event.getPlayer(), "You have no permission to use this bow!");
             return;
         }
 

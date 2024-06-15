@@ -30,6 +30,14 @@ public final class Settings {
         return Optional.ofNullable(namedConfigs.get(name));
     }
 
+    public boolean hasNamedConfig(String name) {
+        return namedConfigs.containsKey(name);
+    }
+
+    public Set<String> configNames() {
+        return namedConfigs.keySet();
+    }
+
 
     public static class Builder {
         private boolean requirePermission = false;

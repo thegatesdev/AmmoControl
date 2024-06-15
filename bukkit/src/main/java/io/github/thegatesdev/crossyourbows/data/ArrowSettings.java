@@ -9,6 +9,7 @@ public final class ArrowSettings {
     private final int pierce;
     private final boolean critical;
 
+    // TODO Make constructor take the builder instead
     private ArrowSettings(int knockBack, double damage, int pierce, boolean critical) {
         this.knockBack = knockBack;
         this.damage = damage;

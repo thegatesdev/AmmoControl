@@ -2,8 +2,6 @@ package io.github.thegatesdev.crossyourbows.handler;
 
 import io.github.thegatesdev.crossyourbows.data.*;
 import io.papermc.paper.event.entity.*;
-import net.kyori.adventure.text.*;
-import net.kyori.adventure.text.format.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
@@ -12,18 +10,18 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.*;
 import org.bukkit.persistence.*;
-import org.slf4j.*;
 
 import java.util.*;
 import java.util.function.*;
-import java.util.logging.Logger;
+import java.util.logging.*;
+
+import static io.github.thegatesdev.crossyourbows.interaction.Messages.*;
 
 public final class GameplayHandler implements Listener {
 
-    private static final String PERM_USAGE = "crossyourbows.enable";
+    private static final String PERM_USAGE = "crossyourbows.usage";
     private static final NamespacedKey KEY_CHARGE_COUNT = new NamespacedKey("crossyourbows", "charge_count");
     private static final NamespacedKey KEY_FIRE_CONFIG_NAME = new NamespacedKey("crossyourbows", "fire_config_name");
-    private static final org.slf4j.Logger log = LoggerFactory.getLogger(GameplayHandler.class);
 
     private final Logger logger;
     private Settings settings;
@@ -35,6 +33,26 @@ public final class GameplayHandler implements Listener {
         applySettings(settings);
     }
 
+
+    public ApplyResult applyFireConfig(CrossbowMeta crossbowMeta, String name) {
+        if (!settings.hasNamedConfig(name)) return ApplyResult.CONFIG_NOT_FOUND;
+        if (crossbowMeta.hasChargedProjectiles()) return ApplyResult.ITEM_IN_CROSSBOW;
+
+        var pdc = crossbowMeta.getPersistentDataContainer();
+        pdc.set(KEY_FIRE_CONFIG_NAME, PersistentDataType.STRING, name);
+        pdc.remove(KEY_CHARGE_COUNT);
+        return ApplyResult.SUCCESS;
+    }
+
+    public void removeFireConfig(CrossbowMeta crossbowMeta) {
+        var pdc = crossbowMeta.getPersistentDataContainer();
+        pdc.remove(KEY_FIRE_CONFIG_NAME);
+        pdc.remove(KEY_CHARGE_COUNT);
+    }
+
+    // TODO add setting for disabling damage cooldown for arrows
+    // TODO add setting for applying custom name and lore
+    // TODO permission per item
 
     public void applySettings(Settings settings) {
         this.settings = settings;
@@ -84,7 +102,7 @@ public final class GameplayHandler implements Listener {
             if (firework != (selection == ProjectileSelection.FIREWORK)) {
                 event.setConsumeItem(false);
                 event.setCancelled(true);
-                player.sendMessage(Component.text("This item cannot be loaded!", Style.style(NamedTextColor.RED)));
+                warn(player, "This item cannot be loaded!");
                 return;
             }
         }
@@ -119,6 +137,12 @@ public final class GameplayHandler implements Listener {
         Optional<FireConfiguration> opFireConfig = configForItem(pdc);
         if (opFireConfig.isEmpty()) return;
         FireConfiguration fireConfig = opFireConfig.get();
+
+        // If permissions are enabled, the player needs a permission for the bow settings to apply.
+        if (settings.requirePermission() && !event.getPlayer().hasPermission(PERM_USAGE)) {
+            warn(event.getPlayer(), "You have no permission to use this bow!");
+            return;
+        }
 
         final boolean keepBowArrow;
         if (fireConfig.maxCharges() == 0) keepBowArrow = true; // Infinite charges
@@ -179,5 +203,9 @@ public final class GameplayHandler implements Listener {
 
     private record AfterFireCallback(UUID playerID,
             BiConsumer<EntityShootBowEvent, Player> nextShootHandler) {
+    }
+
+    public enum ApplyResult {
+        SUCCESS, CONFIG_NOT_FOUND, ITEM_IN_CROSSBOW
     }
 }

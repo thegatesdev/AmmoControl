@@ -1,22 +1,11 @@
-require_permission: false
+require_permission: true
 fire_configurations:
-  default:
+  example_machine_gun:
     consume_item: true
-    fire_cooldown: 2
+    fire_cooldown: 3
     max_charges: 20
     arrow:
-      knockback: 3
-      damage: 10.0
-      pierce: 3
-      critical: true
-  shotgun:
-    fire_cooldown: 10
-    max_charges: 3
-    allow_projectile: arrow
-    custom_firing:
-      arrow_pickup: false
-      pattern:
-        type: line # point
-        rotation: 90
-      spread_x: 2
-      spread_y: 20
+      knockback: 2
+      damage: 5.0
+      pierce: 2
+      critical: false

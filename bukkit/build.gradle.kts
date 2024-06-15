@@ -1,3 +1,5 @@
+import xyz.jpenilla.resourcefactory.bukkit.Permission
+
 plugins {
     java
     id("xyz.jpenilla.resource-factory-bukkit-convention") version "1.1.1"
@@ -37,4 +39,26 @@ bukkitPluginYaml {
     author = "thegatesdev"
     apiVersion = "1.20.6"
     description = "Crossbows have never been this powerful!"
+
+    commands {
+        create("crossyourbows") {
+            permission = "crossyourbows.command"
+            description = "CrossYourBows command"
+            usage = "/crossyourbows (reload|apply|reset) <args>"
+
+            aliases.add("cb")
+        }
+    }
+
+    permissions {
+        defaultPermission = Permission.Default.OP
+
+        create("crossyourbows.command") {
+            description = "Allows the usage of the /crossyourbows command"
+        }
+        create("crossyourbows.usage") {
+            description = "Enables custom bow settings"
+            defaultPermission = Permission.Default.FALSE
+        }
+    }
 }

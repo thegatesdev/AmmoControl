@@ -64,14 +64,23 @@ public final class Command implements CommandExecutor, TabCompleter {
     }
 
     private void handleApply(CommandSender sender, int currentArg, String[] args) {
-        if (!(sender instanceof Player player)) return; // TODO show help
-        if (args.length <= currentArg) return; // TODO show help
+        if (!(sender instanceof Player player)) {
+            warn(sender, "Only players can execute this command!");
+            return;
+        }
+        if (args.length <= currentArg) {
+            warn(player, "Expected the name of the config to apply!");
+            return;
+        }
         String configName = args[currentArg];
 
         ItemStack toApply = player.getInventory().getItemInMainHand();
         if (toApply.getType() != Material.CROSSBOW) {
             toApply = player.getInventory().getItemInOffHand();
-            if (toApply.getType() != Material.CROSSBOW) return; // TODO show help
+            if (toApply.getType() != Material.CROSSBOW) {
+                warn(player, "No crossbow found to apply to!");
+                return;
+            }
         }
 
         CrossbowMeta meta = (CrossbowMeta) toApply.getItemMeta();
@@ -87,12 +96,18 @@ public final class Command implements CommandExecutor, TabCompleter {
     }
 
     private void handleReset(CommandSender sender) {
-        if (!(sender instanceof Player player)) return; // TODO show help
+        if (!(sender instanceof Player player)) {
+            warn(sender, "Only players can execute this command!");
+            return;
+        }
 
         ItemStack toReset = player.getInventory().getItemInMainHand();
         if (toReset.getType() != Material.CROSSBOW) {
             toReset = player.getInventory().getItemInOffHand();
-            if (toReset.getType() != Material.CROSSBOW) return; // TODO show help
+            if (toReset.getType() != Material.CROSSBOW) {
+                warn(player, "No crossbow found to reset!");
+                return;
+            }
         }
 
         CrossbowMeta meta = (CrossbowMeta) toReset.getItemMeta();

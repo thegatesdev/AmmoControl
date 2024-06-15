@@ -94,21 +94,23 @@ public final class GameplayHandler implements Listener {
         Optional<FireConfiguration> opFireConfig = configForItem(bowMeta.getPersistentDataContainer());
         if (opFireConfig.isEmpty()) return;
         FireConfiguration fireConfig = opFireConfig.get();
+        boolean isFirework = chargedIsFirework(player.getInventory(), event.getHand());
 
-        // Determine which projectile was charged, and if it should be ignored.
-        ProjectileSelection selection = fireConfig.projectileSelection();
-        if (selection != ProjectileSelection.BOTH) {
-            boolean firework = chargedIsFirework(player.getInventory(), event.getHand());
-            if (firework != (selection == ProjectileSelection.FIREWORK)) {
+        // Check if projectile is allowed to be charged
+        ProjectileSelection allowSelection = fireConfig.allowProjectile();
+        if (allowSelection != ProjectileSelection.BOTH) {
+            if (isFirework != (allowSelection == ProjectileSelection.FIREWORK)) {
                 event.setConsumeItem(false);
                 event.setCancelled(true);
                 warn(player, "This item cannot be loaded!");
                 return;
             }
         }
-
-        // Should the item be consumed?
-        event.setConsumeItem(fireConfig.consumeItem());
+        // Check if settings should be applied for projectile
+        ProjectileSelection enableSelection = fireConfig.enableProjectile();
+        if (enableSelection != ProjectileSelection.BOTH) {
+            if (isFirework != (enableSelection == ProjectileSelection.FIREWORK)) return;
+        }
 
         // Add charge data if needed
         int maxCharges = fireConfig.maxCharges();
@@ -117,6 +119,9 @@ public final class GameplayHandler implements Listener {
             pdc.set(KEY_CHARGE_COUNT, PersistentDataType.INTEGER, maxCharges);
             metaChanged = true;
         }
+
+        // Should the item be consumed?
+        event.setConsumeItem(fireConfig.consumeItem());
 
         if (metaChanged) bowItem.setItemMeta(bowMeta);
     }
@@ -144,6 +149,7 @@ public final class GameplayHandler implements Listener {
             return;
         }
 
+        // Check if the bow should keep its arrow (infinite charges, or some charges left).
         final boolean keepBowArrow;
         if (fireConfig.maxCharges() == 0) keepBowArrow = true; // Infinite charges
         else if (fireConfig.maxCharges() == 1) keepBowArrow = false; // Always one charge
@@ -163,6 +169,13 @@ public final class GameplayHandler implements Listener {
         afterFireCallback = new AfterFireCallback(event.getPlayer().getUniqueId(), (fireEvent, player) -> {
             ItemStack bowItemFire = fireEvent.getBow();
             if (bowItemFire == null || bowItemFire.getType() != Material.CROSSBOW) return;
+
+            // Check if settings should be applied for projectile
+            ProjectileSelection enableSelection = fireConfig.enableProjectile();
+            if (enableSelection != ProjectileSelection.BOTH) {
+                boolean arrow = (fireEvent.getProjectile() instanceof Arrow);
+                if (arrow != (enableSelection == ProjectileSelection.ARROW)) return;
+            }
 
             if (fireEvent.getProjectile() instanceof Arrow arrow) {
                 opArrowSettings.ifPresent(st -> {

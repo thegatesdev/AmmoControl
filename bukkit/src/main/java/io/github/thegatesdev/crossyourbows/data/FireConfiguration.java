@@ -9,16 +9,18 @@ public final class FireConfiguration {
     private final boolean pickupLastProjectile;
     private final int maxCharges;
     private final int fireCooldown;
-    private final ProjectileSelection projectileSelection;
+    private final ProjectileSelection allowProjectile;
+    private final ProjectileSelection enableProjectile;
     private final ArrowSettings arrowSettings;
     private final CustomFiring firing;
 
-    private FireConfiguration(boolean consumeItem, boolean pickupLastProjectile, int maxCharges, int fireCooldown, ProjectileSelection projectileSelection, ArrowSettings arrowSettings, CustomFiring firing) {
+    private FireConfiguration(boolean consumeItem, boolean pickupLastProjectile, int maxCharges, int fireCooldown, ProjectileSelection allowProjectile, ProjectileSelection enableProjectile, ArrowSettings arrowSettings, CustomFiring firing) {
         this.consumeItem = consumeItem;
         this.pickupLastProjectile = pickupLastProjectile;
         this.maxCharges = maxCharges;
         this.fireCooldown = fireCooldown;
-        this.projectileSelection = projectileSelection;
+        this.allowProjectile = allowProjectile;
+        this.enableProjectile = enableProjectile;
         this.arrowSettings = arrowSettings;
         this.firing = firing;
     }
@@ -40,8 +42,12 @@ public final class FireConfiguration {
         return fireCooldown;
     }
 
-    public ProjectileSelection projectileSelection() {
-        return projectileSelection;
+    public ProjectileSelection allowProjectile() {
+        return allowProjectile;
+    }
+
+    public ProjectileSelection enableProjectile() {
+        return enableProjectile;
     }
 
     public Optional<ArrowSettings> arrowSettings() {
@@ -58,7 +64,8 @@ public final class FireConfiguration {
         private boolean pickupLastProjectile = true;
         private int maxCharges = 1;
         private int fireCooldown = 0;
-        private ProjectileSelection projectileSelection = ProjectileSelection.BOTH;
+        private ProjectileSelection allowProjectile = ProjectileSelection.BOTH;
+        private ProjectileSelection enableProjectile = ProjectileSelection.BOTH;
         private ArrowSettings arrowSettings = null;
         private CustomFiring firing = null;
 
@@ -68,16 +75,17 @@ public final class FireConfiguration {
         public Builder(Builder other) {
             this.consumeItem = other.consumeItem;
             this.pickupLastProjectile = other.pickupLastProjectile;
+            this.enableProjectile = other.enableProjectile;
             this.maxCharges = other.maxCharges;
             this.fireCooldown = other.fireCooldown;
-            this.projectileSelection = other.projectileSelection;
+            this.allowProjectile = other.allowProjectile;
             this.arrowSettings = other.arrowSettings;
             this.firing = other.firing;
         }
 
 
         public FireConfiguration build() {
-            return new FireConfiguration(consumeItem, pickupLastProjectile, maxCharges, fireCooldown, projectileSelection, arrowSettings, firing);
+            return new FireConfiguration(consumeItem, pickupLastProjectile, maxCharges, fireCooldown, allowProjectile, enableProjectile, arrowSettings, firing);
         }
 
         public Builder load(ConfigurationSection conf) {
@@ -85,8 +93,12 @@ public final class FireConfiguration {
             consumeItem(conf.getBoolean("pickup_last_projectile", pickupLastProjectile));
             maxCharges(conf.getInt("max_charges", maxCharges));
             fireCooldown(conf.getInt("fire_cooldown", fireCooldown));
+
             String selectionString = conf.getString("allow_projectile");
-            if (selectionString != null) projectileSelection(ProjectileSelection.read(selectionString));
+            if (selectionString != null) allowProjectile(ProjectileSelection.read(selectionString));
+            selectionString = conf.getString("enable_projectile");
+            if (selectionString != null) enableProjectile(ProjectileSelection.read(selectionString));
+
             ConfigurationSection arrowSettingsConf = conf.getConfigurationSection("arrow");
             if (arrowSettingsConf != null) arrowSettings(new ArrowSettings.Builder().load(arrowSettingsConf).build());
             // TODO custom firing load here
@@ -114,8 +126,13 @@ public final class FireConfiguration {
             return this;
         }
 
-        public Builder projectileSelection(ProjectileSelection projectileSelection) {
-            this.projectileSelection = Objects.requireNonNull(projectileSelection);
+        public Builder allowProjectile(ProjectileSelection allowProjectile) {
+            this.allowProjectile = Objects.requireNonNull(allowProjectile);
+            return this;
+        }
+
+        public Builder enableProjectile(ProjectileSelection enableProjectile) {
+            this.enableProjectile = enableProjectile;
             return this;
         }
 

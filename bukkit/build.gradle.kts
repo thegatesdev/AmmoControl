@@ -20,6 +20,7 @@ dependencies {
 }
 
 java {
+    withSourcesJar()
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }

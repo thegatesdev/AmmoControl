@@ -171,6 +171,10 @@ public final class GameplayHandler implements Listener {
                     arrow.setDamage(st.damage());
                     arrow.setCritical(st.critical());
                 });
+                // Set arrow to not be a pickup
+                if (!fireConfig.pickupLastProjectile() || keepBowArrow) {
+                    arrow.setPickupStatus(AbstractArrow.PickupStatus.CREATIVE_ONLY);
+                }
             }
 
             if (keepBowArrow) {
@@ -178,10 +182,6 @@ public final class GameplayHandler implements Listener {
                 bowItemFire.setItemMeta(bowMeta);
                 // Optionally apply cooldown
                 player.setCooldown(Material.CROSSBOW, cooldown);
-                // Set arrow to not be a pickup (allows picking up the last shot arrow)
-                if (fireEvent.getProjectile() instanceof Arrow arrow) {
-                    arrow.setPickupStatus(AbstractArrow.PickupStatus.CREATIVE_ONLY);
-                }
             }
         });
     }

@@ -6,14 +6,16 @@ import java.util.*;
 
 public final class FireConfiguration {
     private final boolean consumeItem;
+    private final boolean pickupLastProjectile;
     private final int maxCharges;
     private final int fireCooldown;
     private final ProjectileSelection projectileSelection;
     private final ArrowSettings arrowSettings;
     private final CustomFiring firing;
 
-    private FireConfiguration(boolean consumeItem, int maxCharges, int fireCooldown, ProjectileSelection projectileSelection, ArrowSettings arrowSettings, CustomFiring firing) {
+    private FireConfiguration(boolean consumeItem, boolean pickupLastProjectile, int maxCharges, int fireCooldown, ProjectileSelection projectileSelection, ArrowSettings arrowSettings, CustomFiring firing) {
         this.consumeItem = consumeItem;
+        this.pickupLastProjectile = pickupLastProjectile;
         this.maxCharges = maxCharges;
         this.fireCooldown = fireCooldown;
         this.projectileSelection = projectileSelection;
@@ -24,6 +26,10 @@ public final class FireConfiguration {
 
     public boolean consumeItem() {
         return consumeItem;
+    }
+
+    public boolean pickupLastProjectile() {
+        return pickupLastProjectile;
     }
 
     public int maxCharges() {
@@ -49,6 +55,7 @@ public final class FireConfiguration {
 
     public static class Builder {
         private boolean consumeItem = true;
+        private boolean pickupLastProjectile = true;
         private int maxCharges = 1;
         private int fireCooldown = 0;
         private ProjectileSelection projectileSelection = ProjectileSelection.BOTH;
@@ -60,6 +67,7 @@ public final class FireConfiguration {
 
         public Builder(Builder other) {
             this.consumeItem = other.consumeItem;
+            this.pickupLastProjectile = other.pickupLastProjectile;
             this.maxCharges = other.maxCharges;
             this.fireCooldown = other.fireCooldown;
             this.projectileSelection = other.projectileSelection;
@@ -69,11 +77,12 @@ public final class FireConfiguration {
 
 
         public FireConfiguration build() {
-            return new FireConfiguration(consumeItem, maxCharges, fireCooldown, projectileSelection, arrowSettings, firing);
+            return new FireConfiguration(consumeItem, pickupLastProjectile, maxCharges, fireCooldown, projectileSelection, arrowSettings, firing);
         }
 
         public Builder load(ConfigurationSection conf) {
             consumeItem(conf.getBoolean("consume_item", consumeItem));
+            consumeItem(conf.getBoolean("pickup_last_projectile", pickupLastProjectile));
             maxCharges(conf.getInt("max_charges", maxCharges));
             fireCooldown(conf.getInt("fire_cooldown", fireCooldown));
             String selectionString = conf.getString("allow_projectile");
@@ -88,6 +97,10 @@ public final class FireConfiguration {
         public Builder consumeItem(boolean consumeItem) {
             this.consumeItem = consumeItem;
             return this;
+        }
+
+        public void pickupLastProjectile(boolean pickupLastProjectile) {
+            this.pickupLastProjectile = pickupLastProjectile;
         }
 
         public Builder maxCharges(int maxCharges) {

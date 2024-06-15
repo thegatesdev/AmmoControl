@@ -61,7 +61,7 @@ bukkitPluginYaml {
         }
         create("crossyourbows.usage") {
             description = "Enables custom bow settings"
-            defaultPermission = Permission.Default.FALSE
+            default = Permission.Default.FALSE
         }
     }
 }

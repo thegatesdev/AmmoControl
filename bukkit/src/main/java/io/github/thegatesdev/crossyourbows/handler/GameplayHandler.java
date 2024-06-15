@@ -194,7 +194,7 @@ public final class GameplayHandler implements Listener {
         afterFireCallback = null;
 
         if (callback.playerID != player.getUniqueId()) {
-            logger.warning("Plugin event order assumption failed!");
+            logger.warning("Plugin event order assumption failed! Crossbows may not work correctly, please report to the plugin author!");
             return;
         }
         callback.nextShootHandler.accept(event, player);

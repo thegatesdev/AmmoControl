@@ -99,8 +99,9 @@ public final class FireConfiguration {
             return this;
         }
 
-        public void pickupLastProjectile(boolean pickupLastProjectile) {
+        public Builder pickupLastProjectile(boolean pickupLastProjectile) {
             this.pickupLastProjectile = pickupLastProjectile;
+            return this;
         }
 
         public Builder maxCharges(int maxCharges) {
@@ -108,8 +109,9 @@ public final class FireConfiguration {
             return this;
         }
 
-        public void fireCooldown(int fireCooldown) {
-            this.fireCooldown = fireCooldown; // TODO fix builder returns
+        public Builder fireCooldown(int fireCooldown) {
+            this.fireCooldown = fireCooldown;
+            return this;
         }
 
         public Builder projectileSelection(ProjectileSelection projectileSelection) {
@@ -117,8 +119,9 @@ public final class FireConfiguration {
             return this;
         }
 
-        public void arrowSettings(ArrowSettings arrowSettings) {
+        public Builder arrowSettings(ArrowSettings arrowSettings) {
             this.arrowSettings = arrowSettings;
+            return this;
         }
 
         public Builder firing(CustomFiring firing) {

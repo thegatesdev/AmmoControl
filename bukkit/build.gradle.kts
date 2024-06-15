@@ -33,6 +33,10 @@ tasks {
     }
     jar {
         archiveBaseName = "CrossYourBows-Bukkit"
+        manifest {
+            // We don't use NMS... disable remapping
+            attributes["paperweight-mappings-namespace"] = "mojang"
+        }
     }
 }
 

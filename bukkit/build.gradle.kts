@@ -32,7 +32,7 @@ tasks {
         legacyPluginLoading = false
     }
     jar {
-        archiveBaseName = "AmmoControl-Bukkit"
+        archiveBaseName = "CrossYourBows-Bukkit"
     }
 }
 

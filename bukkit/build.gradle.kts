@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "io.github.thegatesdev"
-version = "1.1"
+version = "2.0"
 description = "Minecraft plugin for extra crossbow settings"
 
 
@@ -30,6 +30,9 @@ tasks {
     runServer {
         minecraftVersion("1.20.6")
         legacyPluginLoading = false
+    }
+    jar {
+        archiveBaseName = "AmmoControl-Bukkit"
     }
 }
 

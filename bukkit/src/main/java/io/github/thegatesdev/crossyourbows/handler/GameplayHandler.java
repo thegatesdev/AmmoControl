@@ -73,7 +73,7 @@ public final class GameplayHandler implements Listener {
     }
 
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     private void handleCrossbowCharge(EntityLoadCrossbowEvent event) {
         // Check for player (other entities can charge crossbows).
         if (!(event.getEntity() instanceof Player player)) return;
@@ -198,7 +198,7 @@ public final class GameplayHandler implements Listener {
         });
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     private void handleAfterFire(EntityShootBowEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
         AfterFireCallback callback = afterFireCallback;

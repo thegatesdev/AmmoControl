@@ -44,7 +44,10 @@ public final class Command implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, org.bukkit.command.@NotNull Command command, @NotNull String label, @NotNull String[] args) {
         int currentArg = 0;
-        if (args.length == 0) return true; // TODO show help
+        if (args.length == 0) {
+            warn(sender, "Expected a subcommand!");
+            return true;
+        }
 
         String arg = args[currentArg].toLowerCase();
         switch (arg) {

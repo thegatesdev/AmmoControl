@@ -87,7 +87,7 @@ public final class Command implements CommandExecutor, TabCompleter {
         }
 
         CrossbowMeta meta = (CrossbowMeta) toApply.getItemMeta();
-        GameplayHandler.ApplyResult result = plugin.gameplayHandler().applyFireConfig(meta, configName);
+        BowHandler.ApplyResult result = plugin.bowHandler().applyFireConfig(meta, configName);
         switch (result) {
             case CONFIG_NOT_FOUND -> warn(sender, "Could not find '%s' configuration!".formatted(configName));
             case ITEM_IN_CROSSBOW -> warn(sender, "Cannot apply to charged crossbow!");
@@ -114,7 +114,7 @@ public final class Command implements CommandExecutor, TabCompleter {
         }
 
         CrossbowMeta meta = (CrossbowMeta) toReset.getItemMeta();
-        plugin.gameplayHandler().removeFireConfig(meta);
+        plugin.bowHandler().removeFireConfig(meta);
 
         toReset.setItemMeta(meta);
 

@@ -17,7 +17,7 @@ import java.util.logging.*;
 
 import static io.github.thegatesdev.crossyourbows.interaction.Messages.*;
 
-public final class GameplayHandler implements Listener {
+public final class BowHandler implements Listener {
 
     private static final String PERM_USAGE = "crossyourbows.usage";
     private static final NamespacedKey KEY_CHARGE_COUNT = new NamespacedKey("crossyourbows", "charge_count");
@@ -28,9 +28,18 @@ public final class GameplayHandler implements Listener {
 
     private volatile AfterFireCallback afterFireCallback;
 
-    public GameplayHandler(Logger logger, Settings settings) {
+    public BowHandler(Logger logger, Settings settings) {
         this.logger = logger;
         applySettings(settings);
+    }
+
+    // TODO add setting for disabling damage cooldown for arrows
+    // TODO add setting for applying custom name and lore
+    // TODO permission per item
+
+
+    public void applySettings(Settings settings) {
+        this.settings = settings;
     }
 
 
@@ -50,13 +59,6 @@ public final class GameplayHandler implements Listener {
         pdc.remove(KEY_CHARGE_COUNT);
     }
 
-    // TODO add setting for disabling damage cooldown for arrows
-    // TODO add setting for applying custom name and lore
-    // TODO permission per item
-
-    public void applySettings(Settings settings) {
-        this.settings = settings;
-    }
 
     private Optional<FireConfiguration> configForItem(PersistentDataContainer pdc) {
         String nameValue = pdc.get(KEY_FIRE_CONFIG_NAME, PersistentDataType.STRING);

@@ -12,29 +12,30 @@ import java.util.logging.*;
 public final class CrossYourBowsBukkit extends JavaPlugin {
 
     private final Logger logger = getLogger();
-    private Settings currentSettings;
     private GameplayHandler gameplayHandler;
     private Command command;
 
 
-    private void loadSettings() {
+    private Settings loadSettings() {
         reloadConfig();
-        currentSettings = new Settings.Builder().load(getConfig()).build();
+        return new Settings.Builder().load(getConfig()).build();
     }
 
 
     public void reload() {
-        loadSettings();
-        gameplayHandler.applySettings(currentSettings);
-        command.applySettings(currentSettings);
+        Settings settings = loadSettings();
+
+        gameplayHandler.applySettings(settings);
+        command.applySettings(settings);
     }
 
     @Override
     public void onLoad() {
         saveDefaultConfig();
-        loadSettings();
-        gameplayHandler = new GameplayHandler(logger, currentSettings);
-        command = new Command(this, currentSettings);
+        Settings settings = loadSettings();
+
+        gameplayHandler = new GameplayHandler(logger, settings);
+        command = new Command(this, settings);
     }
 
     @Override

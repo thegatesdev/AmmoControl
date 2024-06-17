@@ -30,6 +30,8 @@ The below example makes bows with the 'example_machine_gun' configuration able t
 Run `/crossyourbows apply example_machine_gun` with a crossbow in your hand to apply the configuration.
 
 ```yaml
+arrow_damage_cooldown: false # disable damage cooldown for all arrows
+firework_damage_cooldown: true # keep damage cooldown on for fireworks (default is true)
 fire_configurations:
   example_machine_gun:
     consume_item: true # consume the projectile item when charged (default is true)
@@ -51,7 +53,7 @@ For now, use the examples as a reference, they cover all the currently available
 
 ## Future plans
 
-- Configurable arrow damage cooldown (for making fast firing crossbows actually useful).
+- ~~Configurable arrow damage cooldown (for making fast firing crossbows actually useful).~~
 - Configurable fire patterns (fire multiple arrows, e.g. for making a shotgun).
 - Configurable arrow speed and (if it is possible) damage falloff.
 

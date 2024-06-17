@@ -33,7 +33,6 @@ public final class BowHandler implements Listener {
         applySettings(settings);
     }
 
-    // TODO add setting for disabling damage cooldown for arrows
     // TODO add setting for applying custom name and lore
     // TODO permission per item
 

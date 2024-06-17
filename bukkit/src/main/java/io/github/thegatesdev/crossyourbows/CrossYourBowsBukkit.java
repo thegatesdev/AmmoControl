@@ -37,7 +37,7 @@ public final class CrossYourBowsBukkit extends JavaPlugin {
         Settings settings = loadSettings();
 
         bowHandler = new BowHandler(logger, settings);
-        damageHandler = new DamageHandler(logger, settings);
+        damageHandler = new DamageHandler(logger, this, settings);
         command = new Command(this, settings);
     }
 

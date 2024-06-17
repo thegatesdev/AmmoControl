@@ -1,4 +1,6 @@
 require_permission: true
+arrow_damage_cooldown: true
+firework_damage_cooldown: true
 fire_configurations:
   example_machine_gun:
     consume_item: true

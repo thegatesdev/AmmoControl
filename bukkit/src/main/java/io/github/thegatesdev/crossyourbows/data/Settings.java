@@ -7,11 +7,15 @@ import java.util.*;
 public final class Settings {
 
     private final boolean requirePermission;
+    private final boolean noArrowDamageCooldown; // TODO make a separate plugin for this, probably
+    private final boolean noFireworkDamageCooldown;
     private final FireConfiguration defaultConfig;
     private final Map<String, FireConfiguration> namedConfigs;
 
-    private Settings(boolean requirePermission, FireConfiguration defaultConfig, Map<String, FireConfiguration> namedConfigs) {
+    private Settings(boolean requirePermission, boolean noArrowDamageCooldown, boolean noFireworkDamageCooldown, FireConfiguration defaultConfig, Map<String, FireConfiguration> namedConfigs) {
         this.requirePermission = requirePermission;
+        this.noArrowDamageCooldown = noArrowDamageCooldown;
+        this.noFireworkDamageCooldown = noFireworkDamageCooldown;
         this.defaultConfig = defaultConfig;
         this.namedConfigs = namedConfigs;
     }
@@ -19,6 +23,14 @@ public final class Settings {
 
     public boolean requirePermission() {
         return requirePermission;
+    }
+
+    public boolean noArrowDamageCooldown() {
+        return noArrowDamageCooldown;
+    }
+
+    public boolean noFireworkDamageCooldown() {
+        return noFireworkDamageCooldown;
     }
 
     public Optional<FireConfiguration> defaultConfig() {
@@ -41,6 +53,8 @@ public final class Settings {
 
     public static class Builder {
         private boolean requirePermission = false;
+        private boolean noArrowDamageCooldown = false;
+        private boolean noFireworkDamageCooldown = false;
         private FireConfiguration defaultConfiguration = null;
         private final Map<String, FireConfiguration> namedConfigs;
 
@@ -51,17 +65,21 @@ public final class Settings {
 
         public Builder(Builder other) {
             this.requirePermission = other.requirePermission;
+            this.noArrowDamageCooldown = other.noArrowDamageCooldown;
+            this.noFireworkDamageCooldown = other.noFireworkDamageCooldown;
             this.defaultConfiguration = other.defaultConfiguration;
             this.namedConfigs = new HashMap<>(other.namedConfigs);
         }
 
 
         public Settings build() {
-            return new Settings(requirePermission, defaultConfiguration, new HashMap<>(namedConfigs));
+            return new Settings(requirePermission, noArrowDamageCooldown, noFireworkDamageCooldown, defaultConfiguration, new HashMap<>(namedConfigs));
         }
 
         public Builder load(ConfigurationSection conf) {
             requirePermission(conf.getBoolean("require_permission", requirePermission));
+            noArrowDamageCooldown(!conf.getBoolean("arrow_damage_cooldown", noArrowDamageCooldown));
+            noFireworkDamageCooldown(!conf.getBoolean("firework_damage_cooldown", noFireworkDamageCooldown));
             var configSections = conf.getConfigurationSection("fire_configurations");
             if (configSections != null) {
                 var defaultSection = configSections.getConfigurationSection("default");
@@ -85,6 +103,16 @@ public final class Settings {
 
         public Builder requirePermission(boolean requirePermission) {
             this.requirePermission = requirePermission;
+            return this;
+        }
+
+        public Builder noArrowDamageCooldown(boolean noArrowDamageCooldown) {
+            this.noArrowDamageCooldown = noArrowDamageCooldown;
+            return this;
+        }
+
+        public Builder noFireworkDamageCooldown(boolean noFireworkDamageCooldown) {
+            this.noFireworkDamageCooldown = noFireworkDamageCooldown;
             return this;
         }
 

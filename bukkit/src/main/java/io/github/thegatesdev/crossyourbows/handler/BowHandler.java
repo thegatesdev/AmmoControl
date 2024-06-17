@@ -179,6 +179,7 @@ public final class BowHandler implements Listener {
 
             if (fireEvent.getProjectile() instanceof Arrow arrow) {
                 opArrowSettings.ifPresent(st -> {
+                    // TODO paper deprecated this in 1.21, wait for new API before this works again
                     arrow.setKnockbackStrength(st.knockBack());
                     arrow.setPierceLevel(st.pierce());
                     arrow.setDamage(st.damage());

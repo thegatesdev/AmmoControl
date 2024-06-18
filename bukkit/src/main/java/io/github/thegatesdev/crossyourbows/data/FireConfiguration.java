@@ -14,15 +14,15 @@ public final class FireConfiguration {
     private final ArrowSettings arrowSettings;
     private final CustomFiring firing;
 
-    private FireConfiguration(boolean consumeItem, boolean pickupLastProjectile, int maxCharges, int fireCooldown, ProjectileSelection allowProjectile, ProjectileSelection enableProjectile, ArrowSettings arrowSettings, CustomFiring firing) {
-        this.consumeItem = consumeItem;
-        this.pickupLastProjectile = pickupLastProjectile;
-        this.maxCharges = maxCharges;
-        this.fireCooldown = fireCooldown;
-        this.allowProjectile = allowProjectile;
-        this.enableProjectile = enableProjectile;
-        this.arrowSettings = arrowSettings;
-        this.firing = firing;
+    private FireConfiguration(Builder builder) {
+        this.consumeItem = builder.consumeItem;
+        this.pickupLastProjectile = builder.pickupLastProjectile;
+        this.maxCharges = builder.maxCharges;
+        this.fireCooldown = builder.fireCooldown;
+        this.allowProjectile = builder.allowProjectile;
+        this.enableProjectile = builder.enableProjectile;
+        this.arrowSettings = builder.arrowSettings;
+        this.firing = builder.firing;
     }
 
 
@@ -85,7 +85,7 @@ public final class FireConfiguration {
 
 
         public FireConfiguration build() {
-            return new FireConfiguration(consumeItem, pickupLastProjectile, maxCharges, fireCooldown, allowProjectile, enableProjectile, arrowSettings, firing);
+            return new FireConfiguration(this);
         }
 
         public Builder load(ConfigurationSection conf) {

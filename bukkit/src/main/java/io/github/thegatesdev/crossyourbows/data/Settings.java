@@ -12,12 +12,12 @@ public final class Settings {
     private final FireConfiguration defaultConfig;
     private final Map<String, FireConfiguration> namedConfigs;
 
-    private Settings(boolean requirePermission, boolean noArrowDamageCooldown, boolean noFireworkDamageCooldown, FireConfiguration defaultConfig, Map<String, FireConfiguration> namedConfigs) {
-        this.requirePermission = requirePermission;
-        this.noArrowDamageCooldown = noArrowDamageCooldown;
-        this.noFireworkDamageCooldown = noFireworkDamageCooldown;
-        this.defaultConfig = defaultConfig;
-        this.namedConfigs = namedConfigs;
+    private Settings(Builder builder) {
+        this.requirePermission = builder.requirePermission;
+        this.noArrowDamageCooldown = builder.noArrowDamageCooldown;
+        this.noFireworkDamageCooldown = builder.noFireworkDamageCooldown;
+        this.defaultConfig = builder.defaultConfiguration;
+        this.namedConfigs = new HashMap<>(builder.namedConfigs);
     }
 
 
@@ -73,7 +73,7 @@ public final class Settings {
 
 
         public Settings build() {
-            return new Settings(requirePermission, noArrowDamageCooldown, noFireworkDamageCooldown, defaultConfiguration, new HashMap<>(namedConfigs));
+            return new Settings(this);
         }
 
         public Builder load(ConfigurationSection conf) {

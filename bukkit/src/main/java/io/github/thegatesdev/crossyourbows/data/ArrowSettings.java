@@ -11,12 +11,12 @@ public final class ArrowSettings {
     private final boolean critical;
 
     // TODO Make constructor take the builder instead
-    private ArrowSettings(double speed, int knockBack, double damage, int pierce, boolean critical) {
-        this.speed = speed;
-        this.knockBack = knockBack;
-        this.damage = damage;
-        this.pierce = pierce;
-        this.critical = critical;
+    private ArrowSettings(Builder builder) {
+        this.speed = builder.speed;
+        this.knockBack = builder.knockBack;
+        this.damage = builder.damage;
+        this.pierce = builder.pierce;
+        this.critical = builder.critical;
     }
 
 
@@ -61,7 +61,7 @@ public final class ArrowSettings {
 
 
         public ArrowSettings build() {
-            return new ArrowSettings(speed, knockBack, damage, pierce, critical);
+            return new ArrowSettings(this);
         }
 
         public Builder load(ConfigurationSection conf) {

@@ -8,11 +8,11 @@ public final class CustomFiring {
     private final double spreadX;
     private final double spreadY;
 
-    private CustomFiring(boolean arrowPickup, FirePattern pattern, double spreadX, double spreadY) {
-        this.arrowPickup = arrowPickup;
-        this.pattern = pattern;
-        this.spreadX = spreadX;
-        this.spreadY = spreadY;
+    private CustomFiring(Builder builder) {
+        this.arrowPickup = builder.arrowPickup;
+        this.pattern = builder.pattern;
+        this.spreadX = builder.spreadX;
+        this.spreadY = builder.spreadY;
     }
 
 
@@ -42,7 +42,7 @@ public final class CustomFiring {
 
         public CustomFiring build() {
             Objects.requireNonNull(pattern, "pattern cannot be null");
-            return new CustomFiring(arrowPickup, pattern, spreadX, spreadY);
+            return new CustomFiring(this);
         }
 
 

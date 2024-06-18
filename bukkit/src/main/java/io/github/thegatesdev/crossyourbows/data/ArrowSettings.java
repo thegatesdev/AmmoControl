@@ -4,19 +4,25 @@ import org.bukkit.configuration.*;
 
 public final class ArrowSettings {
 
+    private final double speed;
     private final int knockBack;
     private final double damage;
     private final int pierce;
     private final boolean critical;
 
     // TODO Make constructor take the builder instead
-    private ArrowSettings(int knockBack, double damage, int pierce, boolean critical) {
+    private ArrowSettings(double speed, int knockBack, double damage, int pierce, boolean critical) {
+        this.speed = speed;
         this.knockBack = knockBack;
         this.damage = damage;
         this.pierce = pierce;
         this.critical = critical;
     }
 
+
+    public double speed() {
+        return speed;
+    }
 
     public int knockBack() {
         return knockBack;
@@ -36,6 +42,7 @@ public final class ArrowSettings {
 
 
     public static class Builder {
+        private double speed = 0;
         private int knockBack = 1;
         private double damage = 9.0;
         private int pierce = 1;
@@ -45,6 +52,7 @@ public final class ArrowSettings {
         }
 
         public Builder(Builder other) {
+            this.speed = other.speed;
             this.knockBack = other.knockBack;
             this.damage = other.damage;
             this.pierce = other.pierce;
@@ -53,10 +61,11 @@ public final class ArrowSettings {
 
 
         public ArrowSettings build() {
-            return new ArrowSettings(knockBack, damage, pierce, critical);
+            return new ArrowSettings(speed, knockBack, damage, pierce, critical);
         }
 
         public Builder load(ConfigurationSection conf) {
+            speed(conf.getDouble("speed", speed));
             knockBack(conf.getInt("knockback", knockBack));
             damage(conf.getDouble("damage", damage));
             pierce(conf.getInt("pierce", pierce));
@@ -64,6 +73,11 @@ public final class ArrowSettings {
             return this;
         }
 
+
+        public Builder speed(double speed) {
+            this.speed = speed;
+            return this;
+        }
 
         public Builder knockBack(int knockBack) {
             this.knockBack = knockBack;

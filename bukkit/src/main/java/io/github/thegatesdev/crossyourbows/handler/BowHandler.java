@@ -10,6 +10,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.*;
 import org.bukkit.persistence.*;
+import org.bukkit.util.Vector;
 
 import java.util.*;
 import java.util.function.*;
@@ -184,6 +185,10 @@ public final class BowHandler implements Listener {
                     arrow.setPierceLevel(st.pierce());
                     arrow.setDamage(st.damage());
                     arrow.setCritical(st.critical());
+                    if (st.speed() != 0) {
+                        Vector dir = arrow.getVelocity().normalize();
+                        arrow.setVelocity(dir.multiply(st.speed()));
+                    }
                 });
                 // Set arrow to not be a pickup
                 if (!fireConfig.pickupLastProjectile() || keepBowArrow) {

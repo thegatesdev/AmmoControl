@@ -6,6 +6,13 @@ Cross Your Bows allows you to configure crossbow behaviour to your heart's conte
 
 You can create multiple crossbow configurations, that can be applied to individual (or all) crossbows.
 
+## Versions
+
+Cross Your Bows is currently updated for Minecraft 1.20.6.
+The plugin will only support the latest (non-experimental) version, with a small margin.
+
+**Minecraft 1.21 cannot be supported until Paper finishes work on the item changes!**
+
 ## Examples
 
 ### Infinity for Crossbows
@@ -40,6 +47,7 @@ fire_configurations:
     allow_projectile: arrow # fireworks won't be able to be charged
     pickup_last_projectile: false # last shot arrow in 'clip' cannot be picked up again
     arrow:
+      speed: 0 # speed is the same as vanilla, set to a higher (or lower) value to modify speed (default is 0)
       knockback: 2 # arrows deal extra knockback
       damage: 5.0 # arrows deal 5.0 points of damage
       pierce: 2 # arrows pierce 2 entities
@@ -55,7 +63,7 @@ For now, use the examples as a reference, they cover all the currently available
 
 - ~~Configurable arrow damage cooldown (for making fast firing crossbows actually useful).~~
 - Configurable fire patterns (fire multiple arrows, e.g. for making a shotgun).
-- Configurable arrow speed and (if it is possible) damage falloff.
+- ~~Configurable arrow speed~~ and (if it is possible) damage falloff.
 
 ## The End
 

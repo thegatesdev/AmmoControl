@@ -63,16 +63,45 @@ bow_configurations:
       critical: false # arrows are not critical (default is true for crossbows, which gives extra damage)
 ```
 
-## All Settings
-
-**In the future, this section will describe all the configuration options and permissions in detail.**
-For now, use the examples as a reference, they cover all the currently available settings.
-
 ## Future plans
 
-- ~~Configurable arrow damage cooldown (for making fast firing crossbows actually useful).~~
 - Configurable fire patterns (fire multiple arrows, e.g. for making a shotgun).
 - ~~Configurable arrow speed~~ and (if it is possible) damage falloff.
+- ~~Configurable display properties (name and lore)~~
+- ~~Configurable arrow damage cooldown (for making fast firing crossbows actually useful).~~
+
+## Details
+
+### Permissions
+
+> `crossyourbows.command`
+>
+> Allows the usage of the `/crossyourbows` command.
+> This includes all subcommands.
+
+> `crossyourbows.usage`
+>
+> When `require_permission` is enabled, this permission is required for the custom bow settings to apply.
+> When a player does not have the permission, crossbows will work like vanilla for them.
+
+### Commands
+
+Cross Your Bows adds one command to the game: `/crossyourbows` (the alias is `/cb`).
+
+> `/crossyourbows reload`
+>
+> Read all the settings from the plugin config, and enable them.
+> Use this to apply changes made to the `config.yml` when the server is running.
+
+> `/crossyourbows apply <config_name>`
+>
+> Apply a named configuration from `bow_configurations` to a bow in your hand.
+> The bow can't be charged when running this.
+
+> `/crossyourbows reset`
+>
+> Reset the configuration of the bow in your hand.
+> The bow will work like vanilla again (or the `default` bow configuration, if present).
 
 ## The End
 

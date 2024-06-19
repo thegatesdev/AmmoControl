@@ -15,6 +15,9 @@ The plugin will only support the latest (non-experimental) version, with a small
 
 ## Examples
 
+For these options to work, remember to give the right permissions,
+or to disable `require_permission` in the config.
+
 ### Infinity for Crossbows
 
 The below example enables a similar effect to the 'infinity' enchantment, for all crossbows when shooting arrows.

@@ -1,4 +1,4 @@
-require_permission: true
+require_permission: false
 arrow_damage_cooldown: true
 firework_damage_cooldown: true
 fire_configurations:

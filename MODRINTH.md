@@ -3,8 +3,9 @@
 # Cross Your Bows
 
 Cross Your Bows allows you to configure crossbow behaviour to your heart's content.
+You can create multiple crossbow configurations, that can be applied to individual crossbows.
 
-You can create multiple crossbow configurations, that can be applied to individual (or all) crossbows.
+Crossbows have never been this powerful!
 
 ## Versions
 
@@ -15,7 +16,7 @@ The plugin will only support the latest (non-experimental) version, with a small
 
 ## Examples
 
-For these options to work, remember to give the right permissions,
+For the options to work, remember to give the right permissions,
 or to disable `require_permission` in the config.
 
 ### Infinity for Crossbows
@@ -24,7 +25,7 @@ The below example enables a similar effect to the 'infinity' enchantment, for al
 
 ```yaml
 require_permission: false # Disable permission checking, settings will apply to every player regardless of permission
-fire_configurations:
+bow_configurations:
   default: # the 'default' configuration applies to all bows
     consume_item: false # don't consume the projectile when charged
     pickup_last_projectile: false # make the projectile not pickup-able (only applies to arrows)
@@ -40,17 +41,22 @@ The below example makes bows with the 'example_machine_gun' configuration able t
 Run `/crossyourbows apply example_machine_gun` with a crossbow in your hand to apply the configuration.
 
 ```yaml
+require_permission: false # Disable permission checking, settings will apply to every player regardless of permission
 arrow_damage_cooldown: false # disable damage cooldown for all arrows
 firework_damage_cooldown: true # keep damage cooldown on for fireworks (default is true)
-fire_configurations:
+bow_configurations:
   example_machine_gun:
     consume_item: true # consume the projectile item when charged (default is true)
     fire_cooldown: 3 # 3 tick cooldown after firing
     max_charges: 20 # fire 20 arrows before needing to charge again (the 'clip' size)
     allow_projectile: arrow # fireworks won't be able to be charged
     pickup_last_projectile: false # last shot arrow in 'clip' cannot be picked up again
+    display:
+      name: <red>Trigger Happy</red> # Apply a custom name to the item
+      lore: # Apply a list of custom lore to the item
+        - <gray>Destruction at a rapid interval</gray>
     arrow:
-      speed: 0 # speed is the same as vanilla, set to a higher (or lower) value to modify speed (default is 0)
+      speed: 0 # speed stays the same as vanilla, set to a higher (or lower) value to modify speed (default is 0)
       knockback: 2 # arrows deal extra knockback
       damage: 5.0 # arrows deal 5.0 points of damage
       pierce: 2 # arrows pierce 2 entities

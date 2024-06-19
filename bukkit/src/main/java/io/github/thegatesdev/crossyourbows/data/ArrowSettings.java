@@ -10,7 +10,6 @@ public final class ArrowSettings {
     private final int pierce;
     private final boolean critical;
 
-    // TODO Make constructor take the builder instead
     private ArrowSettings(Builder builder) {
         this.speed = builder.speed;
         this.knockBack = builder.knockBack;

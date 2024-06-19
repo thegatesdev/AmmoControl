@@ -3,6 +3,7 @@ package io.github.thegatesdev.crossyourbows;
 import io.github.thegatesdev.crossyourbows.data.*;
 import io.github.thegatesdev.crossyourbows.handler.*;
 import io.github.thegatesdev.crossyourbows.interaction.Command;
+import net.kyori.adventure.text.minimessage.*;
 import org.bukkit.command.*;
 import org.bukkit.plugin.java.*;
 
@@ -19,7 +20,7 @@ public final class CrossYourBowsBukkit extends JavaPlugin {
 
     private Settings loadSettings() {
         reloadConfig();
-        return new Settings.Builder().load(getConfig()).build();
+        return new Settings.Builder(MiniMessage.miniMessage()).load(getConfig()).build();
     }
 
 

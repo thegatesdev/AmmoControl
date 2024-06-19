@@ -3,6 +3,7 @@ package io.github.thegatesdev.crossyourbows.data;
 import java.util.*;
 
 public final class CustomFiring {
+
     private final boolean arrowPickup;
     private final FirePattern pattern;
     private final double spreadX;

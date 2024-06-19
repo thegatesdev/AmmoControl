@@ -1,11 +1,15 @@
 require_permission: false
 arrow_damage_cooldown: true
 firework_damage_cooldown: true
-fire_configurations:
+bow_configurations:
   example_machine_gun:
     consume_item: true
     fire_cooldown: 3
     max_charges: 20
+    display:
+      name: <red>Trigger Happy</red>
+      lore:
+        - <gray>Destruction at a rapid interval</gray>
     arrow:
       speed: 0
       knockback: 2

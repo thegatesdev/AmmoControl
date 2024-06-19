@@ -1,5 +1,6 @@
 package io.github.thegatesdev.crossyourbows.data;
 
+import net.kyori.adventure.text.minimessage.*;
 import org.bukkit.configuration.*;
 
 import java.util.*;
@@ -9,8 +10,8 @@ public final class Settings {
     private final boolean requirePermission;
     private final boolean noArrowDamageCooldown; // TODO make a separate plugin for this, probably
     private final boolean noFireworkDamageCooldown;
-    private final FireConfiguration defaultConfig;
-    private final Map<String, FireConfiguration> namedConfigs;
+    private final BowConfiguration defaultConfig;
+    private final Map<String, BowConfiguration> namedConfigs;
 
     private Settings(Builder builder) {
         this.requirePermission = builder.requirePermission;
@@ -33,17 +34,13 @@ public final class Settings {
         return noFireworkDamageCooldown;
     }
 
-    public Optional<FireConfiguration> defaultConfig() {
+    public Optional<BowConfiguration> defaultConfig() {
         return Optional.ofNullable(defaultConfig);
     }
 
-    public Optional<FireConfiguration> namedConfig(String name) {
+    public Optional<BowConfiguration> namedConfig(String name) {
         if (name == null) return Optional.empty();
         return Optional.ofNullable(namedConfigs.get(name));
-    }
-
-    public boolean hasNamedConfig(String name) {
-        return namedConfigs.containsKey(name);
     }
 
     public Set<String> configNames() {
@@ -52,18 +49,22 @@ public final class Settings {
 
 
     public static class Builder {
+
+        private final MiniMessage miniMessage;
         private boolean requirePermission = false;
         private boolean noArrowDamageCooldown = false;
         private boolean noFireworkDamageCooldown = false;
-        private FireConfiguration defaultConfiguration = null;
-        private final Map<String, FireConfiguration> namedConfigs;
+        private BowConfiguration defaultConfiguration = null;
+        private final Map<String, BowConfiguration> namedConfigs;
 
 
-        public Builder() {
+        public Builder(MiniMessage miniMessage) {
+            this.miniMessage = miniMessage;
             namedConfigs = new HashMap<>();
         }
 
-        public Builder(Builder other) {
+        public Builder(MiniMessage miniMessage, Builder other) {
+            this.miniMessage = miniMessage;
             this.requirePermission = other.requirePermission;
             this.noArrowDamageCooldown = other.noArrowDamageCooldown;
             this.noFireworkDamageCooldown = other.noFireworkDamageCooldown;
@@ -80,10 +81,10 @@ public final class Settings {
             requirePermission(conf.getBoolean("require_permission", requirePermission));
             noArrowDamageCooldown(!conf.getBoolean("arrow_damage_cooldown", noArrowDamageCooldown));
             noFireworkDamageCooldown(!conf.getBoolean("firework_damage_cooldown", noFireworkDamageCooldown));
-            var configSections = conf.getConfigurationSection("fire_configurations");
+            var configSections = conf.getConfigurationSection("bow_configurations");
             if (configSections != null) {
                 var defaultSection = configSections.getConfigurationSection("default");
-                var defaultBuilder = new FireConfiguration.Builder();
+                var defaultBuilder = new BowConfiguration.Builder(miniMessage);
                 if (defaultSection != null) defaultBuilder.load(defaultSection);
                 defaultConfiguration(defaultBuilder.build());
 
@@ -91,7 +92,7 @@ public final class Settings {
                     if (sectionName.equals("default")) continue;
                     var fireSection = configSections.getConfigurationSection(sectionName);
                     if (fireSection == null) continue;
-                    var fireData = new FireConfiguration.Builder(defaultBuilder).load(fireSection);
+                    var fireData = new BowConfiguration.Builder(miniMessage, defaultBuilder).load(fireSection);
 
                     addNamedConfiguration(sectionName.toLowerCase(), fireData.build());
                 }
@@ -116,12 +117,12 @@ public final class Settings {
             return this;
         }
 
-        public Builder defaultConfiguration(FireConfiguration defaultConfiguration) {
+        public Builder defaultConfiguration(BowConfiguration defaultConfiguration) {
             this.defaultConfiguration = defaultConfiguration;
             return this;
         }
 
-        public Builder addNamedConfiguration(String name, FireConfiguration configuration) {
+        public Builder addNamedConfiguration(String name, BowConfiguration configuration) {
             namedConfigs.putIfAbsent(name, configuration);
             return this;
         }

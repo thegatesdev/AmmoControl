@@ -44,23 +44,38 @@ public final class BowHandler implements Listener {
 
 
     public ApplyResult applyFireConfig(CrossbowMeta crossbowMeta, String name) {
-        if (!settings.hasNamedConfig(name)) return ApplyResult.CONFIG_NOT_FOUND;
+        Optional<BowConfiguration> opBowConfig = settings.namedConfig(name);
+        if (opBowConfig.isEmpty()) return ApplyResult.CONFIG_NOT_FOUND;
+        BowConfiguration bowConfig = opBowConfig.get();
         if (crossbowMeta.hasChargedProjectiles()) return ApplyResult.ITEM_IN_CROSSBOW;
 
+        // Apply persistent data
         var pdc = crossbowMeta.getPersistentDataContainer();
         pdc.set(KEY_FIRE_CONFIG_NAME, PersistentDataType.STRING, name);
         pdc.remove(KEY_CHARGE_COUNT);
+
+        // Apply custom bow settings
+        bowConfig.displaySettings().ifPresent(displaySettings -> {
+            displaySettings.lore().ifPresent(crossbowMeta::lore);
+            displaySettings.name().ifPresent(crossbowMeta::itemName);
+        });
+
         return ApplyResult.SUCCESS;
     }
 
     public void removeFireConfig(CrossbowMeta crossbowMeta) {
+        // Remove persistent data
         var pdc = crossbowMeta.getPersistentDataContainer();
         pdc.remove(KEY_FIRE_CONFIG_NAME);
         pdc.remove(KEY_CHARGE_COUNT);
+
+        // Reset custom bow settings
+        crossbowMeta.lore(null);
+        if (crossbowMeta.hasItemName()) crossbowMeta.itemName(null);
     }
 
 
-    private Optional<FireConfiguration> configForItem(PersistentDataContainer pdc) {
+    private Optional<BowConfiguration> configForItem(PersistentDataContainer pdc) {
         String nameValue = pdc.get(KEY_FIRE_CONFIG_NAME, PersistentDataType.STRING);
         if (nameValue == null) return settings.defaultConfig();
         return settings.namedConfig(nameValue);
@@ -93,9 +108,9 @@ public final class BowHandler implements Listener {
         }
 
         // Try getting the relevant configuration for this bow item (or the global defaults, if present).
-        Optional<FireConfiguration> opFireConfig = configForItem(bowMeta.getPersistentDataContainer());
+        Optional<BowConfiguration> opFireConfig = configForItem(bowMeta.getPersistentDataContainer());
         if (opFireConfig.isEmpty()) return;
-        FireConfiguration fireConfig = opFireConfig.get();
+        BowConfiguration fireConfig = opFireConfig.get();
         boolean isFirework = chargedIsFirework(player.getInventory(), event.getHand());
 
         // Check if projectile is allowed to be charged
@@ -141,9 +156,9 @@ public final class BowHandler implements Listener {
         PersistentDataContainer pdc = bowMeta.getPersistentDataContainer();
 
         // Find the configuration for this item
-        Optional<FireConfiguration> opFireConfig = configForItem(pdc);
+        Optional<BowConfiguration> opFireConfig = configForItem(pdc);
         if (opFireConfig.isEmpty()) return;
-        FireConfiguration fireConfig = opFireConfig.get();
+        BowConfiguration fireConfig = opFireConfig.get();
 
         // If permissions are enabled, the player needs a permission for the bow settings to apply.
         if (settings.requirePermission() && !event.getPlayer().hasPermission(PERM_USAGE)) {

@@ -52,7 +52,7 @@ bow_configurations:
     allow_projectile: arrow # fireworks won't be able to be charged
     pickup_last_projectile: false # last shot arrow in 'clip' cannot be picked up again
     display:
-      name: <red>Trigger Happy</red> # Apply a custom name to the item
+      name: <red>Arrow Hailer</red> # Apply a custom name to the item
       lore: # Apply a list of custom lore to the item
         - <gray>Destruction at a rapid interval</gray>
     arrow:

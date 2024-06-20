@@ -7,7 +7,7 @@ bow_configurations:
     fire_cooldown: 3
     max_charges: 20
     display:
-      name: <red>Trigger Happy</red>
+      name: <red>Arrow Hailer</red>
       lore:
         - <gray>Destruction at a rapid interval</gray>
     arrow:

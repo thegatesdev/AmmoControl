@@ -215,7 +215,7 @@ public final class BowHandler implements Listener {
                 // Reset to charged state
                 bowItemFire.setItemMeta(bowMeta);
                 // Optionally apply cooldown
-                player.setCooldown(Material.CROSSBOW, cooldown);
+                if (cooldown > 0) player.setCooldown(Material.CROSSBOW, cooldown);
             }
         });
     }

@@ -49,11 +49,11 @@ public final class Command implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        String arg = args[currentArg].toLowerCase();
+        String arg = args[currentArg].toUpperCase();
         switch (arg) {
-            case "reload" -> handleReload(sender);
-            case "apply" -> handleApply(sender, currentArg + 1, args);
-            case "reset" -> handleReset(sender);
+            case "RELOAD" -> handleReload(sender);
+            case "APPLY" -> handleApply(sender, currentArg + 1, args);
+            case "RESET" -> handleReset(sender);
             default -> warn(sender, "Unknown subcommand '%s'!".formatted(arg));
         }
 
@@ -75,7 +75,7 @@ public final class Command implements CommandExecutor, TabCompleter {
             warn(player, "Expected the name of the config to apply!");
             return;
         }
-        String configName = args[currentArg];
+        String configName = args[currentArg].toLowerCase();
 
         ItemStack toApply = player.getInventory().getItemInMainHand();
         if (toApply.getType() != Material.CROSSBOW) {

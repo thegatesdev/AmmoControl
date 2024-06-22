@@ -9,8 +9,15 @@ Crossbows have never been this powerful!
 
 ## Versions
 
-Cross Your Bows is currently updated for Minecraft 1.21.
+Cross Your Bows is currently updated for Minecraft 1.20.6.
 The plugin will only support the latest (non-experimental) version, with a small margin.
+
+### Note on version 1.21
+
+The 1.21 version is in **beta** at this time, some options don't work yet
+(notably, arrow knockback, and there might be issues with arrow damage).
+Once Paper implements the proper API for the big item changes in this version,
+the plugin will be updated as well.
 
 ## Examples
 

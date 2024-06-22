@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "io.github.thegatesdev"
-version = "2024.6.19"
+version = "2024.6.22"
 description = "Minecraft plugin for extra crossbow settings"
 
 

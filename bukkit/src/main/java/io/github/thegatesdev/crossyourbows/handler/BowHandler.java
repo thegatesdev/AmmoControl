@@ -142,6 +142,7 @@ public final class BowHandler implements Listener {
         if (metaChanged) bowItem.setItemMeta(bowMeta);
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.HIGH)
     private void handleFireInteraction(PlayerInteractEvent event) {
         if (!event.hasItem()) return;
